@@ -61,6 +61,7 @@ class PostHandler(BaseHTTPRequestHandler):
         # Execute data insertion query
         cur.execute(insert_query)
 
+        # Make sure that changes are commited to DB
         db.commit()
 
         print create_query
