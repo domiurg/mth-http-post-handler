@@ -7,20 +7,20 @@
 #include <BridgeServer.h>
 #include <Process.h>
 
-class Connection {
+class HttpPost {
 public:
-	Connection();
-	void sendData(String)
-	void setHost(const char*)
-	void setPort(int)
+	HttpPost();
+	void sendData(String data);
+	void setHost(const char* host);
+	void setPort(int port);
 		
 private:
 	void getMAC();
 
-	BridgeClient client;
-	String MAC;
-	const char* host;
-	int port;
+	BridgeClient _client;
+	String _MAC;
+	const char* _host;
+	int _port;
 };
 
 #endif

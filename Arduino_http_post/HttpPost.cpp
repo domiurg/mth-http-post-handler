@@ -1,23 +1,23 @@
-#include <HttpPost.h>
+#include "HttpPost.h"
 
-HttpPost::Connection() {
-	MAC = "00:00:00:00:00:00";
-	host = "";
-	port = 0;
+HttpPost::HttpPost() {
+	_MAC = "00:00:00:00:00:00";
+	_host = "";
+	_port = 0;
 }
 
-void setHost(const char* Host) {
-	host = Host;
+void HttpPost::setHost(const char* Host) {
+	_host = Host;
 }
 
-void setPort(int Port) {
-	port = Port;
+void HttpPost::setPort(int Port) {
+	_port = Port;
 }
 
 void HttpPost::getMAC() {
 	Process wifiCheck;
 	String wifi_stat;
-	while (MAC.equals("00:00:00:00:00:00")) {
+	while (_MAC.equals("00:00:00:00:00:00")) {
 		wifiCheck.runShellCommand("/usr/bin/pretty-wifi-info.lua");
 		while (wifiCheck.available() > 0) {
 			char c = wifiCheck.read();
@@ -25,34 +25,34 @@ void HttpPost::getMAC() {
 		}
 		Serial.println(wifi_stat);
 		int mac_pos = wifi_stat.lastIndexOf('M') + 13;
-		MAC = wifi_stat.substring(mac_pos, mac_pos + 17);
+		_MAC = wifi_stat.substring(mac_pos, mac_pos + 17);
 
 		delay(2500);
 	}
 }
 
-void sendData(String data) {
-	String params = "MAC=" + MAC + "&";
+void HttpPost::sendData(String data) {
+	String params = "MAC=" + _MAC + "&";
 	params += data;
 
-	if (client.connect(host, port)) {
+	if (_client.connect(_host, _port)) {
 		Serial.println("connected");
-		client.println("POST / HTTP/1.1");
-		client.print("Host: "); client.println(host);
-		client.print("Content-length:");
-		client.println(params.length());
+		_client.println("POST / HTTP/1.1");
+		_client.print("Host: "); _client.println(_host);
+		_client.print("Content-length:");
+		_client.println(params.length());
 		Serial.println(params);
-		client.println("Connection: Close");
-		client.println("Content-Type: application/x-www-form-urlencoded;");
-		client.println();
-		client.println(params);
+		_client.println("Connection: Close");
+		_client.println("Content-Type: application/x-www-form-urlencoded;");
+		_client.println();
+		_client.println(params);
 	}
 	else {
 		Serial.println("connection failed");
 		delay(1000);
 	}
 
-	if (client.connected()) {
-		client.stop();   //disconnect from server
+	if (_client.connected()) {
+		_client.stop();   //disconnect from server
 	}
 }
