@@ -6,13 +6,12 @@ HttpPost::HttpPost() {
 	_port = 0;
 }
 
-void HttpPost::setHost(const char* Host) {
-	_host = Host;
+void HttpPost::init(const char* host, int port) {
+	getMAC();
+	_host = host;
+	_port = port;
 }
 
-void HttpPost::setPort(int Port) {
-	_port = Port;
-}
 
 void HttpPost::getMAC() {
 	Process wifiCheck;
@@ -27,7 +26,7 @@ void HttpPost::getMAC() {
 		int mac_pos = wifi_stat.lastIndexOf('M') + 13;
 		_MAC = wifi_stat.substring(mac_pos, mac_pos + 17);
 
-		delay(2500);
+		delay(1500);
 	}
 }
 

@@ -11,8 +11,7 @@ class HttpPost {
 public:
 	HttpPost();
 	void sendData(String data);
-	void setHost(const char* host);
-	void setPort(int port);
+	void init(const char*, int);
 		
 private:
 	void getMAC();
