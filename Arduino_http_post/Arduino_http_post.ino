@@ -1,26 +1,21 @@
 #include <Bridge.h>
-//#include <Console.h>
-//#include <FileIO.h>
-//#include <HttpClient.h>
-//#include <Process.h>
 #include <BridgeClient.h>
 #include <BridgeServer.h>
+#include <Process.h>
  
 //IP Address of the sever on which there is the WS: http://www.mywebsite.com/
 //IPAddress server();
  
 BridgeClient client;
          
-String param ="";                     //String of POST parameters
-String MAC = "00:00:00:00:00:00";     //MAC Address
- 
-void setup()
-{
-	//Start Bridge Between Arduino and Linino
-	Bridge.begin();
-	Serial.begin(9600);
-  
-  //Get MAC Address Info for Identification
+String params ="";                             //String of POST parameters
+String MAC = "00:00:00:00:00:00";             //MAC Address
+//const char* Host = "domiurg-lab.duckdns.org"; //Hostname of the server
+const char* Host = "domiurg-home.duckdns.org"; //Hostname of the server
+int Port = 8000;
+
+void getMAC(){
+    //Get MAC Address Info for Identification
   Process wifiCheck;
   String wifi_stat;
   while (MAC.equals("00:00:00:00:00:00")){
@@ -35,36 +30,54 @@ void setup()
 
     delay(2500);
   }
+}
+
+void sendData(const char* host, int port, String params){
+  if (client.connect(host, port)) {
+    Serial.println("connected");
+    client.println("POST / HTTP/1.1");
+    client.print("Host: "); client.println(host);
+    client.print("Content-length:");
+    client.println(params.length());
+    Serial.println(params);
+    client.println("Connection: Close");
+    client.println("Content-Type: application/x-www-form-urlencoded;");
+    client.println();
+    client.println(params);  
+  } else {
+    Serial.println("connection failed");
+    delay(1000);
+  }
   
+  if(client.connected()){
+    client.stop();   //disconnect from server
+  }
+}
+
+String str(const char* chars){
+  String result = "";
+  int len = sizeof(chars) / sizeof(char);
+  for (int i = 0; i < len; i++){
+    result += chars[i];  
+  }
+  return result;
+}
+ 
+void setup()
+{
+	//Start Bridge Between Arduino and Linino
+	Bridge.begin();
+	Serial.begin(9600);
+  
+  getMAC(); 
 }
  
 void loop()
 {
-	
-	
-	if (client.connect("domiurg-lab.duckdns.org", 8000)) {
-		Serial.println("connected");
-		delay(2500);
-    param = "MAC=" + MAC + "&";
+	  params = "MAC=" + MAC + "&";
+    params += "par1=foo&par2=bar";
     
-		param += "par1=foo&par2=bar";
-		
-		
-		client.println("POST / HTTP/1.1");
-		client.println("Host: domiurg-lab.duckdns.org");
-		client.print("Content-length:");
-		client.println(param.length());
-		Serial.println(param);
-		client.println("Connection: Close");
-		client.println("Content-Type: application/x-www-form-urlencoded;");
-		client.println();
-		client.println(param);  
-	}else{
-		Serial.println("connection failed");
-		delay(1000);
-		}
-		if(client.connected()){
-         		client.stop();   //disconnect from server
-		}
+    sendData(Host, Port, params);
+	
 		delay(2000);
 }
