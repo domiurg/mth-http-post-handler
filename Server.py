@@ -36,16 +36,17 @@ class PostHandler(BaseHTTPRequestHandler):
         # i.e data_<number_of_parameters>
         # and prepare header for the Insertion Query
         create_query = 'CREATE TABLE IF NOT EXISTS ' + "`" + form.getvalue('MAC') + \
-                       '_data_' + str(len(form.keys())) + "`" + ' (' \
+                       '_data_' + str(len(form.keys()) - 1) + "`" + ' (' \
                        'id int(11) NOT NULL AUTO_INCREMENT, ' \
-                       'time TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, '
+                       'time DATETIME DEFAULT CURRENT_TIMESTAMP, '
 
         insert_query = 'INSERT INTO ' + "`" + form.getvalue('MAC') + \
-                       '_data_' + str(len(form.keys())) + "`" + ' ('
+                       '_data_' + str(len(form.keys()) - 1) + "`" + ' ('
         # Iterate over Keys for DB Row names
         for key in form.keys():
-            create_query += str(key) + ' varchar(50) DEFAULT NULL, '
-            insert_query += str(key) + ','
+            if key != 'MAC':
+                create_query += str(key) + ' varchar(50) DEFAULT NULL, '
+                insert_query += str(key) + ','
         create_query += 'PRIMARY KEY (id));'
 
         insert_query = insert_query[:len(insert_query) - 1]
@@ -56,8 +57,9 @@ class PostHandler(BaseHTTPRequestHandler):
         # Next Prepare data for insertion query
         # Iterate over Key-Value pair
         for key in form.keys():
-            insert_query += "'" + str(form.getvalue(key)) + "'" + ','
-            print key, form.getvalue(key)
+            if key != 'MAC':
+                insert_query += "'" + str(form.getvalue(key)) + "'" + ','
+                print key, form.getvalue(key)
 
         insert_query = insert_query[:len(insert_query) - 1]
         insert_query += ');'
