@@ -2,7 +2,7 @@
 
 HttpPost connection;
 
-const char* Host = "domiurg-home.duckdns.org"; //Hostname of the server
+const char* Host = "domiurg-lab.duckdns.org"; //Hostname of the server
 int Port = 8000;
 
 String params ="";                             //String of POST parameters
