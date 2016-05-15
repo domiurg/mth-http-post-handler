@@ -35,10 +35,13 @@ class PostHandler(BaseHTTPRequestHandler):
         # Differentiate tables by number of parameters
         # i.e data_<number_of_parameters>
         # and prepare header for the Insertion Query
-        create_query = 'CREATE TABLE IF NOT EXISTS data_' + str(len(form.keys())) + ' (' \
-                        'id int(11) NOT NULL AUTO_INCREMENT, '
+        create_query = 'CREATE TABLE IF NOT EXISTS ' + "`" + form.getvalue('MAC') + \
+                       '_data_' + str(len(form.keys())) + "`" + ' (' \
+                       'id int(11) NOT NULL AUTO_INCREMENT, ' \
+                       'time TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, '
 
-        insert_query = 'INSERT INTO data_' + str(len(form.keys())) + ' ('
+        insert_query = 'INSERT INTO ' + "`" + form.getvalue('MAC') + \
+                       '_data_' + str(len(form.keys())) + "`" + ' ('
         # Iterate over Keys for DB Row names
         for key in form.keys():
             create_query += str(key) + ' varchar(50) DEFAULT NULL, '

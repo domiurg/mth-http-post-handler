@@ -22,7 +22,7 @@ void loop()
     
     connection.sendData(params);
 
-    Serial.println(connection.getMAC());
+    //Serial.println(connection.getMAC());
 		
 		params = "";
 		delay(2000);
