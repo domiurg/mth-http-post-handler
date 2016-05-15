@@ -12,9 +12,10 @@ public:
 	HttpPost();
 	void sendData(String data);
 	void init(const char*, int);
+  String getMAC();
 		
 private:
-	void getMAC();
+	void setMAC();
 
 	BridgeClient _client;
 	String _MAC;

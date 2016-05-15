@@ -7,13 +7,16 @@ HttpPost::HttpPost() {
 }
 
 void HttpPost::init(const char* host, int port) {
-	getMAC();
+	setMAC();
 	_host = host;
 	_port = port;
 }
 
+String HttpPost::getMAC(){
+  return _MAC;
+}
 
-void HttpPost::getMAC() {
+void HttpPost::setMAC() {
 	Process wifiCheck;
 	String wifi_stat;
 	while (_MAC.equals("00:00:00:00:00:00")) {

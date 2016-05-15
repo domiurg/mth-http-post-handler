@@ -21,6 +21,8 @@ void loop()
     params += "par1=foo&par2=bar";
     
     connection.sendData(params);
+
+    Serial.println(connection.getMAC());
 		
 		params = "";
 		delay(2000);
