@@ -13,7 +13,7 @@ class PostHandler(BaseHTTPRequestHandler):
     def do_POST(self):
 
         # Define DB Object
-        db = MySQLdb.connect(host='domiurg-lab.duckdns.org',
+        db = MySQLdb.connect(host='host',
                              user='arduino_user',
                              passwd='sometext',
                              db='arduino_user')
